@@ -5,7 +5,7 @@
 
 .section .data
 file_name:
-.ascii "test.dat\0"
+.ascii "test.dat"
 .lcomm record_buffer, RECORD_SIZE
 
 .section .text
@@ -40,8 +40,8 @@ _start:
 		CALL count_chars
 		ADDL $4, %esp
 		MOVL %eax, %edx
-		MOVL ST_OUTPUT_DESCRIPTOR(%ebp), %ebx
 		MOVL $SYS_WRITE, %eax
+		MOVL ST_OUTPUT_DESCRIPTOR(%ebp), %ebx
 		MOVL $RECORD_FIRSTNAME + record_buffer, %ecx
 		INT $LINUX_SYSCALL
 

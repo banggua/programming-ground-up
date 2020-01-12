@@ -20,7 +20,7 @@ output_file_name:
 .globl _start
 _start:
     MOVL %esp, %ebp
-    SUBL $8, %ebp
+    SUBL $8, %esp
 
     MOVL $SYS_OPEN, %eax
     MOVL $input_file_name, %ebx
@@ -29,6 +29,14 @@ _start:
     INT $LINUX_SYSCALL
 
     MOVL %eax, ST_INPUT_DESCRIPTOR(%ebp)
+
+    MOVL $SYS_OPEN, %eax
+    MOVL $output_file_name, %ebx
+    MOVL $0101, %ecx
+    MOVL $0666, %edx
+    INT $LINUX_SYSCALL
+
+    MOVL %eax, ST_OUTPUT_DESCRIPTOR(%ebp)
 
     loop_begin:
         PUSHL ST_INPUT_DESCRIPTOR(%ebp)
@@ -49,6 +57,14 @@ _start:
         JMP loop_begin
 
     loop_end:
+    	MOVL $SYS_CLOSE, %eax
+        MOVL ST_INPUT_DESCRIPTOR(%ebp), %ebx
+        INT $LINUX_SYSCALL
+
+        MOVL $SYS_CLOSE, %eax
+        MOVL ST_OUTPUT_DESCRIPTOR(%ebp), %ebx
+        INT $LINUX_SYSCALL
+
         MOVL $SYS_EXIT, %eax
         MOVL $0, %ebx
         INT $LINUX_SYSCALL

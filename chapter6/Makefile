@@ -3,7 +3,7 @@ include ../Makefile.header
 SRC += add-year.s count-chars.s linux.s read-record.s read-records.s record-def.s write-newline.s write-record.s write-records.s
 OBJ += $(SRC:.s=.o)
 EXEC += write-records read-records add-year
-TEST += test.dat
+TEST += test.dat testout.dat
 
 all: $(EXEC)
 

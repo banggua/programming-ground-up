@@ -5,54 +5,54 @@
 
 .section .data
 record1:
-	.ascii "Fredrick\0"
-	.rept 31
+	.ascii "Fredrick"
+	.rept 32
 	.byte 0
 	.endr
 
-	.ascii "Bartlett\0"
-	.rept 31
+	.ascii "Bartlett"
+	.rept 32
 	.byte 0
 	.endr
 
-	.ascii "4242 S Prairie\nTulsa, OK 55555\0"
-	.rept 209
+	.ascii "4242 S Prairie Tulsa, OK 55555"
+	.rept 210
 	.byte 0
 	.endr
 
 	.long 45
 
 record2:
-	.ascii "Marilyn\0"
-	.rept 32
-	.byte 0
-	.endr
-
-	.ascii "Taylor\0"
+	.ascii "Marilyn"
 	.rept 33
 	.byte 0
 	.endr
 
-	.ascii "2224 S Johannan St\nChicago, IL 12345\0"
-	.rept 203
+	.ascii "Taylor"
+	.rept 34
+	.byte 0
+	.endr
+
+	.ascii "2224 S Johannan St Chicago, IL 12345"
+	.rept 204
 	.byte 0
 	.endr
 
 	.long 29
 
 record3:
-	.ascii "Derrick\0"
+	.ascii "Derrick"
+	.rept 33
+	.byte 0
+	.endr
+
+	.ascii "McIntire"
 	.rept 32
 	.byte 0
 	.endr
 
-	.ascii "McIntire\0"
-	.rept 31
-	.byte 0
-	.endr
-
-	.ascii "500 W Oakland\nSan Diego, CA 54321\0"
-	.rept 206
+	.ascii "500 W Oakland San Diego, CA 54321"
+	.rept 207
 	.byte 0
 	.endr
 

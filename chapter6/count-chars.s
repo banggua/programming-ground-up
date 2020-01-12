@@ -22,4 +22,4 @@ count_chars:
     count_loop_end:
         MOVL %ecx, %eax
         POPL %ebp
-ret
+RET
