@@ -57,7 +57,7 @@ _start:
         JMP loop_begin
 
     loop_end:
-    	MOVL $SYS_CLOSE, %eax
+        MOVL $SYS_CLOSE, %eax
         MOVL ST_INPUT_DESCRIPTOR(%ebp), %ebx
         INT $LINUX_SYSCALL
 

@@ -34,99 +34,99 @@
 
 .globl _start
 _start:
-	MOVL %esp, %ebp
-	SUBL $ST_SIZE_RESERVE, %esp
+    MOVL %esp, %ebp
+    SUBL $ST_SIZE_RESERVE, %esp
 
-	open_files:
-		open_fd_in:
-			MOVL $SYS_OPEN, %eax
-			MOVL ST_ARGV_1(%ebp), %ebx
-			MOVL $O_RDONLY, %ecx
-			MOVL $0666, %edx
-			INT $LINUX_SYSCALL
-		store_fd_in:
-			MOVL %eax, ST_FD_IN(%ebp)
+    open_files:
+        open_fd_in:
+            MOVL $SYS_OPEN, %eax
+            MOVL ST_ARGV_1(%ebp), %ebx
+            MOVL $O_RDONLY, %ecx
+            MOVL $0666, %edx
+            INT $LINUX_SYSCALL
+        store_fd_in:
+            MOVL %eax, ST_FD_IN(%ebp)
 
-		open_fd_out:
-		store_fd_out:
-			MOVL $1, ST_FD_OUT(%ebp)
+        open_fd_out:
+        store_fd_out:
+            MOVL $1, ST_FD_OUT(%ebp)
 
-	read_loop_begin:
-		MOVL $SYS_READ, %eax
-		MOVL ST_FD_IN(%ebp), %ebx
-		MOVL $BUFFER_DATA, %ecx
-		MOVL $BUFFER_SIZE, %edx
-		INT $LINUX_SYSCALL
+    read_loop_begin:
+        MOVL $SYS_READ, %eax
+        MOVL ST_FD_IN(%ebp), %ebx
+        MOVL $BUFFER_DATA, %ecx
+        MOVL $BUFFER_SIZE, %edx
+        INT $LINUX_SYSCALL
 
-		CMPL $END_OF_FILE, %eax
-		JLE end_loop
+        CMPL $END_OF_FILE, %eax
+        JLE end_loop
 
-	continue_read_loop:
-		PUSHL $BUFFER_DATA
-		PUSHL %eax
-		CALL convert_to_upper
-		POPL %eax
-		ADDL $4, %esp
+    continue_read_loop:
+        PUSHL $BUFFER_DATA
+        PUSHL %eax
+        CALL convert_to_upper
+        POPL %eax
+        ADDL $4, %esp
 
-		MOVL %eax, %edx
-		MOVL $SYS_WRITE, %eax
-		MOVL ST_FD_OUT(%ebp), %ebx
-		MOVL $BUFFER_DATA, %ecx
-		INT $LINUX_SYSCALL
+        MOVL %eax, %edx
+        MOVL $SYS_WRITE, %eax
+        MOVL ST_FD_OUT(%ebp), %ebx
+        MOVL $BUFFER_DATA, %ecx
+        INT $LINUX_SYSCALL
 
-		JMP read_loop_begin
+        JMP read_loop_begin
 
-	end_loop:
-		movl $SYS_CLOSE, %eax
-		movl ST_FD_OUT(%ebp), %ebx
-		int $LINUX_SYSCALL
+    end_loop:
+        movl $SYS_CLOSE, %eax
+        movl ST_FD_OUT(%ebp), %ebx
+        int $LINUX_SYSCALL
 
-		movl $SYS_CLOSE, %eax
-		movl ST_FD_IN(%ebp), %ebx
-		int $LINUX_SYSCALL
+        movl $SYS_CLOSE, %eax
+        movl ST_FD_IN(%ebp), %ebx
+        int $LINUX_SYSCALL
 
-		movl $SYS_EXIT, %eax
-		movl $0, %ebx
-		int $LINUX_SYSCALL
+        movl $SYS_EXIT, %eax
+        movl $0, %ebx
+        int $LINUX_SYSCALL
 
-	.equ LOWERCASE_A, 'a'
-	.equ LOWERCASE_Z, 'z'
-	.equ UPPER_CONVERSION, 'A' - 'a'
+    .equ LOWERCASE_A, 'a'
+    .equ LOWERCASE_Z, 'z'
+    .equ UPPER_CONVERSION, 'A' - 'a'
 
-	.equ ST_BUFFER_LEN, 8
-	.equ ST_BUFFER, 12
+    .equ ST_BUFFER_LEN, 8
+    .equ ST_BUFFER, 12
 
-	.type convert_to_upper, @function
-	convert_to_upper:
-		PUSHL %ebp
-		MOVL %esp, %ebp
+    .type convert_to_upper, @function
+    convert_to_upper:
+        PUSHL %ebp
+        MOVL %esp, %ebp
 
-		MOVL ST_BUFFER(%ebp), %eax
-		MOVL ST_BUFFER_LEN(%ebp), %ebx
-		MOVL $0, %edi
+        MOVL ST_BUFFER(%ebp), %eax
+        MOVL ST_BUFFER_LEN(%ebp), %ebx
+        MOVL $0, %edi
 
-		CMPL $0, %ebx
-		JE end_convert_loop
+        CMPL $0, %ebx
+        JE end_convert_loop
 
-		convert_loop:
-			MOVB (%eax,%edi,1), %cl
+        convert_loop:
+            MOVB (%eax,%edi,1), %cl
 
-			CMPB $LOWERCASE_A, %cl
-			JL next_byte
-			CMPB $LOWERCASE_Z, %cl
-			JG next_byte
+            CMPB $LOWERCASE_A, %cl
+            JL next_byte
+            CMPB $LOWERCASE_Z, %cl
+            JG next_byte
 
-			ADDB $UPPER_CONVERSION, %cl
-			MOVB %cl, (%eax,%edi,1)
+            ADDB $UPPER_CONVERSION, %cl
+            MOVB %cl, (%eax,%edi,1)
 
-		next_byte:
-			INCL %edi
-			CMPL %edi, %ebx
+        next_byte:
+            INCL %edi
+            CMPL %edi, %ebx
 
-			JNE convert_loop
+            JNE convert_loop
 
 
-		end_convert_loop:
-			MOVL %ebp, %esp
-			POPL %ebp
-	ret
+        end_convert_loop:
+            MOVL %ebp, %esp
+            POPL %ebp
+    ret

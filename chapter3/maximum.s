@@ -7,20 +7,20 @@ data_items:
 .section .text
 .globl _start
 _start:
-	MOVL $0, %edi
-	MOVL data_items(,%edi,4), %eax
-	MOVL %eax, %ebx
+    MOVL $0, %edi
+    MOVL data_items(,%edi,4), %eax
+    MOVL %eax, %ebx
 
-	start_loop:
-		CMPL $0, %eax
-		JE loop_exit
-		INCL %edi
-		MOVL data_items(,%edi,4), %eax
-		CMPL %ebx, %eax
-		JLE start_loop
-		MOVL %eax, %ebx
-		JMP start_loop
+    start_loop:
+        CMPL $0, %eax
+        JE loop_exit
+        INCL %edi
+        MOVL data_items(,%edi,4), %eax
+        CMPL %ebx, %eax
+        JLE start_loop
+        MOVL %eax, %ebx
+        JMP start_loop
 
-	loop_exit:
-		MOVL $1, %eax
-		INT $0x80
+    loop_exit:
+        MOVL $1, %eax
+        INT $0x80
