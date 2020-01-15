@@ -2,3 +2,4 @@ AS = as
 ASFLAGS = -32 -gstabs
 LD = ld
 LDFLAGS = -m elf_i386
+LDLINKER += -dynamic-linker /lib/ld-linux.so.2
