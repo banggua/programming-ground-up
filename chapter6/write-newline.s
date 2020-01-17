@@ -3,7 +3,7 @@
 .include "linux.s"
 
 .globl write_newline
-.type write_newline,@function
+.type write_newline, @function
 
 .section .data
 newline:

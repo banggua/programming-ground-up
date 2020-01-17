@@ -8,7 +8,7 @@
 
 .section .text
 .globl write_record
-.type write_record,@function
+.type write_record, @function
 write_record:
     PUSHL %ebp
     MOVL %esp, %ebp
