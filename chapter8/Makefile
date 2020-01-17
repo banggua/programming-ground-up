@@ -1,6 +1,6 @@
 include ../Makefile.header
 
-SRC += helloworld-lib.s helloworld-nolib.s linux.s printf-example.s record-def.s read-record.s write-record.s write-records.s
+SRC += helloworld-lib.s helloworld-nolib.s linux.s printf-example.s read-record.s record-def.s write-record.s write-records.s
 OBJ += $(SRC:.s=.o)
 EXEC += helloworld-lib helloworld-nolib printf-example  write-records
 LOCALLIBS += librecord.so
@@ -20,7 +20,7 @@ printf-example: printf-example.s
 	$(AS) $(ASFLAGS) -o printf-example.o printf-example.s
 	$(LD) $(LDFLAGS) $(LDLINKER) -o printf-example printf-example.o -lc
 
-write-records: read-record.s write-record.s
+write-records: linux.s read-record.s record-def.s write-record.s write-records.s
 	$(AS) $(ASFLAGS) -o read-record.o read-record.s
 	$(AS) $(ASFLAGS) -o write-record.o write-record.s
 	$(LD) $(LDFLAGS) -shared -o librecord.so read-record.o write-record.o

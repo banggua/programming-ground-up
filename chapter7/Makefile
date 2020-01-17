@@ -1,13 +1,13 @@
 include ../Makefile.header
 
-SRC += add-year.s count-chars.s error-exit.s read-record.s record-def.s write-newline.s write-record.s
+SRC += add-year.s count-chars.s error-exit.s linux.s read-record.s record-def.s write-newline.s write-record.s
 OBJ += $(SRC:.s=.o)
 EXEC += add-year
 TEST += test.dat testout.dat
 
 all: $(EXEC)
 
-add-year: add-year.s count-chars.s error-exit.s read-record.s write-newline.s write-record.s
+add-year: add-year.s count-chars.s error-exit.s linux.s read-record.s record-def.s write-newline.s write-record.s
 	$(AS) $(ASFLAGS) -o add-year.o add-year.s
 	$(AS) $(ASFLAGS) -o count-chars.o count-chars.s
 	$(AS) $(ASFLAGS) -o error-exit.o error-exit.s

@@ -6,15 +6,20 @@
 .section .data
 file_name:
 .ascii "test.dat\0"
-
-.section .bss
-.lcomm record_buffer, RECORD_SIZE
+record_buffer_ptr:
+.long 0
 
 .section .text
 .globl _start
 _start:
     .equ ST_INPUT_DESCRIPTOR, -4
     .equ ST_OUTPUT_DESCRIPTOR, -8
+
+    CALL allocate_init
+
+    PUSHL $RECORD_SIZE
+    CALL allocate
+    MOVL %eax, record_buffer_ptr
 
     MOVL %esp, %ebp
     SUBL $8, %esp
@@ -30,20 +35,23 @@ _start:
 
     record_read_loop:
         PUSHL ST_INPUT_DESCRIPTOR(%ebp)
-        PUSHL $record_buffer
+        PUSHL record_buffer_ptr
         CALL read_record
         ADDL $8, %esp
 
         CMPL $RECORD_SIZE, %eax
         JNE finished_reading
 
-        PUSHL $RECORD_FIRSTNAME + record_buffer
+        MOVL record_buffer_ptr, %eax
+        ADDL $RECORD_FIRSTNAME, %eax
+        PUSHL %eax
         CALL count_chars
         ADDL $4, %esp
         MOVL %eax, %edx
         MOVL $SYS_WRITE, %eax
         MOVL ST_OUTPUT_DESCRIPTOR(%ebp), %ebx
-        MOVL $RECORD_FIRSTNAME + record_buffer, %ecx
+        MOVL record_buffer_ptr, %ecx
+        ADDL $RECORD_FIRSTNAME, %ecx
         INT $LINUX_SYSCALL
 
         PUSH ST_OUTPUT_DESCRIPTOR(%ebp)
@@ -53,6 +61,9 @@ _start:
         JMP record_read_loop
 
     finished_reading:
+        PUSHL record_buffer_ptr
+        CALL deallocate
+
         MOVL $SYS_EXIT, %eax
         MOVL $0, %ebx
         INT $LINUX_SYSCALL
